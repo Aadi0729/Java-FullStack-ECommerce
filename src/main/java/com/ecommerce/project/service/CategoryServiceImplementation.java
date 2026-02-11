@@ -9,6 +9,7 @@ import java.util.List;
 @Service
 public class CategoryServiceImplementation implements CategoryService {
     private List<Category> categories = new ArrayList<>();
+    private Long nextId = 1L; // Keeping the track of id's
 
     @Override
     public List<Category> getAllCategories() {
@@ -17,6 +18,19 @@ public class CategoryServiceImplementation implements CategoryService {
 
     @Override
     public void createCategory(Category category) {
+        /*Setting the id manually here, always incremented. Even if the user is sending the
+        id explicitly, then this value will be overridden.*/
+        category.setCategoryId(nextId++);
         categories.add(category);
+    }
+
+    @Override
+    public String deleteCategory(Long categoryId) {
+        Category category = categories.stream()
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .findFirst().get();
+        categories.remove(category);
+
+        return "Category with categoryId: " + categoryId + " has been deleted successfully";
     }
 }
