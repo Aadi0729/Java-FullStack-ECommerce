@@ -28,9 +28,12 @@ public class CategoryServiceImplementation implements CategoryService {
     public String deleteCategory(Long categoryId) {
         Category category = categories.stream()
                 .filter(c -> c.getCategoryId().equals(categoryId))
-                .findFirst().get();
-        categories.remove(category);
+                .findFirst().orElse(null);
 
+        if(category == null)
+            return "Category with id " + categoryId + " not found";
+
+        categories.remove(category);
         return "Category with categoryId: " + categoryId + " has been deleted successfully";
     }
 }
